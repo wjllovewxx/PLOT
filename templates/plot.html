@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style type="text/css">
+        .list {
+            background: #f0f0f0;
+            height: 80px;
+            width: 758px;
+            margin-bottom: 10px;
+        }
+        
+        .showpic {
+            width: 100%;
+        }
+        
+        .imgbtn {
+            transition: filter 0.2s;
+            filter: grayscale(1) brightness(0.7) drop-shadow(0px 0px 0px #474747);
+        }
+        
+        .imgbtn:hover {
+            filter: grayscale(0) brightness(1.2) drop-shadow(4px 4px 4px #474747);
+        }
+        
+        @keyframes frames {
+            0% {
+                filter: grayscale(0) brightness(1) drop-shadow(4px 4px 4px #474747);
+            }
+            1% {
+                filter: grayscale(0) brightness(10) drop-shadow(4px 4px 4px #474747);
+            }
+            100% {
+                filter: grayscale(0) brightness(1) drop-shadow(0px 0px 0px #474747);
+            }
+        }
+        
+        .button {
+            float: right;
+            margin-right: 5px;
+        }
+        
+        div#navigation {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 28px;
+            background: #474747;
+            color: #e0e0e0;
+            opacity: 0.8;
+        }
+        
+        div#container {
+            width: 1366px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 40px;
+        }
+        
+        div#right {
+            float: right;
+            margin-right: 15px;
+        }
+        
+        div#left {
+            position: fixed;
+            float: left;
+            width: 570px;
+            height: 700px;
+            margin-left: 5px;
+            border: 1px solid #474747;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+    </style>
+    <script type="text/javascript" src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        // $(":image").mouseover(function(){
+        //     //$(this).animate({opacity:'0.4'},'fast');
+        //     var img_url = $(this).attr("src");
+        //     $("#left").css("background-image","url(" + img_url.replace(/square/,"bmiddle") + ")");
+        // });
+        // 
+        // $(":image").click(function(){
+        //     $(this).css("animation","frames 1.5s");
+        //     $(this).css("filter"," grayscale(0) brightness(1) drop-shadow(0px 0px 0px #474747)");
+        //     $.get("download/" + $(this).attr("list"), function(data,status){
+        //         alert('数据：' + data + '\n状态：' + status);
+        //     });
+        // });
+        
+        $("#right").delegate("input","mouseover",function(){
+            var img_url = $(this).attr("src");
+            $("#left").css("background-image","url(" + img_url.replace(/square/,"bmiddle") + ")");
+        });
+        
+        $("#right").delegate("input","click",function(){
+            $(this).css("animation","frames 1.5s");
+            $(this).css("filter"," grayscale(0) brightness(1) drop-shadow(0px 0px 0px #474747)");
+            $.get("download/" + $(this).attr("list"), function(data,status){
+                alert('数据：' + data + '\n状态：' + status);
+            });
+        });
+    });
+
+    function part(target){
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function()
+        {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
+            {
+                document.getElementById("right").innerHTML=xmlhttp.responseText;
+            }
+        }
+        if(target == 'home') xmlhttp.open("GET", "http://127.0.0.1:5000/home/",true);
+        else if(target == 'next') xmlhttp.open("GET", "http://127.0.0.1:5000/next/",true);
+        xmlhttp.send();
+    }
+    </script>
+</head>
+
+<body>
+    <title>-P-L-O-T-</title>
+    <div id="navigation">- PLOT - 微博看图助手 -
+        <a><font size="1" color="#c7c7c7">ver_0.1_α</font></a>
+        <!--<input id="path" type="text" readonly="readonly" name="path" size="30" value="C:\"></input>-->
+        <div class="button">
+            <input type="button" value="一些废话" onclick="javaScript:alert('【PLOT-微博看图助手】 ver-0.1-α\n\n喜欢的话请在Github上star或者fork本项目\n\n联系我：sighsxxx@gmail.com')"></input>
+            <input type="button" value="我的首页" onclick="part('home')"></input>
+            <input type="button" value="下页" onclick="part('next')"></input>
+        </div>
+    </div>
+    <div id="container">
+        <div id="right">
+            {% for link_list in link_block %}
+            <div class="list">
+                {% for link in link_list %}
+                <input class="imgbtn" type="image" src="{{link.square}}" list="{{link.md5()}}"></input>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div id="left"></div>
+    </div>
+</body>
+
+</html>

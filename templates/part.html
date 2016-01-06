@@ -1,0 +1,7 @@
+{% for link_list in link_block %}
+<div class="list">
+    {% for link in link_list %}
+    <input class="imgbtn" type="image" src="{{link.square}}" list="{{link.md5()}}"></input>
+    {% endfor %}
+</div>
+{% endfor %}
